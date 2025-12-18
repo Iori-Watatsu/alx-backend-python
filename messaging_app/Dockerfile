@@ -9,11 +9,11 @@ WORKDIR /app
 COPY requirements.txt /app/
 # Install dependencies
 RUN pip install --upgrade pip && pip install -r 
-requirements.txt
+Requirements.txt
 # Copy project files
 COPY . /app/
 # Expose Django default port
 EXPOSE 8000
-# Run Django development server
+# Run server (docker run -p 8000:8000 messaging_app)
 CMD ["python", "manage.py", "runserver", 
 "0.0.0.0:8000"]
