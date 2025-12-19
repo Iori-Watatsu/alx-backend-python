@@ -1,5 +1,7 @@
 #!/bin/bash
-# Start Kubernetes cluster using Minikube
+# Check if minikube is installed
+minikube version
+# Start Kubernetes cluster
 minikube start
 # Verify that the cluster is running
 kubectl cluster-info
