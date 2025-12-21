@@ -1,19 +1,35 @@
-# Use Python 3.10 base image
-FROM python:3.10
-# Prevent Python from writing pyc files
-ENV PYTHONDONTWRITEBYTECODE=1 ENV 
-PYTHONUNBUFFERED=1
-# Set working directory
-WORKDIR /app
-# Copy requirements file
-COPY requirements.txt /app/
-# Install dependencies
-RUN pip install --upgrade pip && pip install -r 
-Requirements.txt
-# Copy project files
-COPY . /app/
-# Expose Django default port
-EXPOSE 8000
-# Run server (docker run -p 8000:8000 messaging_app)
-CMD ["python", "manage.py", "runserver", 
-"0.0.0.0:8000"]
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: messaging-app-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: messaging-app
+  template:
+    metadata:
+      labels:
+        app: messaging-app
+    spec:
+      containers:
+        - name: messaging-app
+          image: kamohelo/messaging-app:latest
+          ports:
+            - containerPort: 8000
+          command: ["python3"]
+          args: ["manage.py", "runserver", "0.0.0.0:8000"]
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: messaging-app-service
+spec:
+  type: ClusterIP
+  selector:
+    app: messaging-app
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
